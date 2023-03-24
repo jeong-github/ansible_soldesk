@@ -1,0 +1,33 @@
+---
+- name: 복구
+  hosts: all
+  tasks:
+    - name: 방화벽 내리기
+      firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: disabled
+      loop:
+        - http
+        - https
+      ignore_errors: yes
+    - name: remove /var/www/html/index.html
+      file:
+        path: /var/www/html/index.html
+        state: absent
+    - name: service down
+      service:
+        name: "{{ item }}"
+        state: stopped
+      with_items:
+        - httpd
+        - firewalld
+
+    - name: pkg remove
+      yum:
+        name:
+          - httpd
+          - mod_ssl
+          - firewalld
+        state: absent

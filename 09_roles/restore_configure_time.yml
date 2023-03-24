@@ -1,0 +1,13 @@
+---
+- name: Restore configure_time.yml
+  hosts: all
+  gather_facts: no
+  pre_tasks:
+    - name: configure rimezone- Asia/Seoul
+      timezone:
+        name: Asia/Seoul
+
+  roles:
+    - rhel-system-roles.timesync 
+    # timezone ==> Asia/Seoul
+    # timesync ==> time.bora.net
